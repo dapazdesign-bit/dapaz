@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DA PAZ — Social Hub</title>
+<style>
+:root{
+  --bg:#f4f3f0; --panel:#fbfaf8; --panel2:#ececea; --line:#dedcd7;
+  --text:#2b2a28; --muted:#8b8983; --accent:#7a776f;
+  --arara:#3b6ea5; --boto:#d46fa0; --ipe:#e8b93a; --selva:#4c8c5c; --onca:#d97a2b; --acai:#7a5ca8;
+  font-family:'Calibri',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);height:100%}
+body{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+h1,h2,h3{font-family:'Cambria',Georgia,serif;font-weight:600;margin:0 0 8px}
+.app{max-width:1100px;margin:0 auto;padding:20px 16px 60px}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:10;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.brand .dot{width:14px;height:14px;border-radius:50%;background:conic-gradient(var(--arara),var(--boto),var(--ipe),var(--selva),var(--onca),var(--acai))}
+.brand h1{font-size:20px;letter-spacing:.5px}
+nav{display:flex;gap:6px;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{background:none;border:1px solid var(--line);color:var(--muted);padding:8px 14px;border-radius:20px;cursor:pointer;white-space:nowrap;font-size:13px}
+nav button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+section.tab{display:none;padding-top:18px}
+section.tab.active{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+.muted{color:var(--muted);font-size:13px}
+button.btn{background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:7px 12px;border-radius:6px;cursor:pointer;font-size:13px}
+button.btn:hover{border-color:var(--accent)}
+button.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+input,select,textarea{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:6px;padding:7px 9px;font-size:13px;font-family:inherit}
+textarea{width:100%;resize:vertical}
+
+/* ---- FEED ---- */
+.igbio{display:flex;gap:14px;align-items:center;padding:14px;margin-bottom:14px}
+.igbio img.avatar{width:64px;height:64px;border-radius:50%;object-fit:cover;background:var(--panel2)}
+.igbio .stats{display:flex;gap:20px;font-size:13px;margin-top:4px}
+.igbio .stats b{display:block;font-size:15px}
+.highlights{display:flex;gap:14px;overflow-x:auto;margin-bottom:16px;padding-bottom:4px}
+.hl{text-align:center;flex:0 0 auto;cursor:pointer}
+.hl .circ{width:56px;height:56px;border-radius:50%;border:2px solid var(--accent);background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:20px}
+.hl span{display:block;font-size:11px;color:var(--muted);margin-top:4px;max-width:60px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+.gitem{position:relative;aspect-ratio:1080/1350;background:var(--panel2);overflow:hidden;cursor:pointer}
+.gitem img,.gitem video{width:100%;height:100%;object-fit:cover}
+.gitem .badge{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.6);padding:2px 5px;border-radius:4px;font-size:11px}
+.gitem .placeholder{display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:12px}
+.addTile{border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:28px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal.open{display:flex}
+.modalbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;max-width:420px;width:100%;max-height:90vh;overflow-y:auto;padding:16px}
+.modalbox img,.modalbox video{width:100%;border-radius:8px;margin-bottom:10px}
+.carousel-track{display:flex;overflow-x:auto;gap:6px;scroll-snap-type:x mandatory}
+.carousel-track img,.carousel-track video{scroll-snap-align:center;width:90%;flex:0 0 90%;border-radius:8px}
+.closeBtn{float:right;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer}
+
+/* ---- PLANILHA ---- */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600;position:sticky;top:0;background:var(--panel)}
+tr:hover{background:var(--panel2)}
+td[contenteditable]{outline:none}
+td[contenteditable]:focus{background:var(--panel2)}
+.tag{padding:2px 7px;border-radius:10px;font-size:11px;display:inline-block}
+.tag.reels{background:var(--boto)}
+.tag.imagem{background:var(--arara)}
+.tag.carrossel{background:var(--ipe);color:#111}
+.tag.story{background:var(--selva)}
+.tblwrap{overflow-x:auto}
+.rowdel{color:var(--muted);cursor:pointer;background:none;border:none;font-size:14px}
+
+/* ---- PROSPECCAO ---- */
+.pgrid{display:grid;grid-template-columns:220px 1fr;gap:14px}
+@media(max-width:640px){.pgrid{grid-template-columns:1fr}}
+.scriptlist button{display:block;width:100%;text-align:left;margin-bottom:6px}
+.scriptlist button.active{border-color:var(--accent);color:#fff}
+
+/* ---- ANUNCIOS / DASH ---- */
+.adgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:14px}
+.kpi{padding:12px}
+.kpi b{display:block;font-size:22px;font-family:'Cambria',serif}
+.helpnote{font-size:12px;color:var(--muted);background:var(--panel2);border-radius:6px;padding:8px 10px;margin-bottom:10px}
+
+/* ---- DASHBOARD (Instagram-style) ---- */
+.dashbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.pillgroup{display:flex;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:4px}
+.pillgroup button{border:none;background:none;color:var(--muted);padding:7px 14px;border-radius:18px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:6px}
+.pillgroup button.active{background:var(--panel2);color:var(--text);font-weight:bold}
+.pillgroup button.active::after{content:"✓"}
+.pillgroup select{border:none;background:var(--panel2);border-radius:14px}
+.insightGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-bottom:14px}
+.insightCard h4{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:0 0 6px}
+.insightCard .big{font-size:26px;font-family:'Cambria',serif}
+.donutrow{display:flex;align-items:center;gap:14px;margin-top:8px}
+.donut{width:70px;height:70px;border-radius:50%;flex:0 0 auto}
+.donutlegend div{font-size:12px;margin-bottom:3px;display:flex;align-items:center;gap:6px}
+.donutlegend .sw{width:9px;height:9px;border-radius:50%;display:inline-block}
+.barlist{margin-top:8px}
+.barrow{margin-bottom:8px}
+.barrow .lbl{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px}
+.barrow .track{background:var(--panel2);border-radius:6px;height:8px;overflow:hidden}
+.barrow .fill{height:100%;background:var(--text);border-radius:6px}
+.timesChart{display:flex;align-items:flex-end;gap:6px;height:110px;margin-top:10px}
+.timesChart .tbar{flex:1;background:var(--panel2);border-radius:4px 4px 0 0;position:relative;display:flex;align-items:flex-end}
+.timesChart .tbar .fill{width:100%;background:var(--text);border-radius:4px 4px 0 0}
+.timesChart .tlabel{font-size:10px;color:var(--muted);text-align:center;margin-top:4px}
+.timesWrap{display:flex;flex-direction:column}
+.histItem{border-top:1px solid var(--line);padding:10px 0;font-size:12px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.histItem .meta{color:var(--muted)}
+.histItem button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px}
+
+/* ---- DRAG & DROP ---- */
+.gitem.dragging{opacity:.4;transform:scale(.97)}
+.gitem.drag-over{outline:2px solid var(--accent)}
+.drag-handle{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.55);color:#fff;border-radius:4px;font-size:11px;padding:2px 5px;cursor:grab;z-index:2;display:none}
+.grid3:hover .drag-handle{display:block}
+
+/* carousel reorder */
+.ci-item{display:flex;align-items:center;gap:8px;background:var(--panel2);border-radius:6px;padding:6px 8px;margin-bottom:6px;cursor:grab}
+.ci-item img,.ci-item video{width:48px;height:48px;object-fit:cover;border-radius:4px}
+.ci-item .ci-handle{color:var(--muted);user-select:none}
+.ci-item.ci-dragging{opacity:.4}
+
+/* ---- CONTEUDO ---- */
+.ct-section{margin-bottom:20px}
+.ct-section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+.ct-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:6px;display:flex;gap:10px;align-items:flex-start}
+.ct-card .ct-check{flex:0 0 18px;height:18px;border-radius:4px;border:1.5px solid var(--line);margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;background:var(--panel2)}
+.ct-card .ct-check.done{background:var(--accent);border-color:var(--accent);color:#fff}
+.ct-card .ct-body{flex:1}
+.ct-card .ct-title{font-size:13px;font-weight:600}
+.ct-card .ct-title.done{text-decoration:line-through;color:var(--muted)}
+.ct-card .ct-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.ct-card .ct-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:0}
+.ct-badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:11px;margin-right:4px}
+.ct-badge.ideia{background:var(--acai);color:#fff}
+.ct-badge.video{background:var(--boto);color:#fff}
+.ct-badge.proximo{background:var(--selva);color:#fff}
+.ct-badge.ref{background:var(--ipe);color:#111}
+.ct-add{display:flex;gap:6px;margin-top:6px}
+.ct-add input{flex:1}
+
+
+/* ---- HIGHLIGHTS COM IMAGEM ---- */
+.hl .circ{position:relative;overflow:hidden}
+.hl .circ img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.hl .circ .hl-edit{position:absolute;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;font-size:18px;cursor:pointer;border-radius:50%}
+.hl:hover .circ .hl-edit{display:flex}
+
+/* ---- CONTEUDO CARDS ---- */
+.ct-section{margin-bottom:28px}
+.ct-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;padding-bottom:6px;border-bottom:2px solid var(--line)}
+.ct-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.ct-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:0;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .2s}
+.ct-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.ct-card-head{padding:10px 12px 8px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:8px}
+.ct-card .ct-check{flex:0 0 18px;height:18px;border-radius:4px;border:1.5px solid var(--line);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;background:var(--panel2);margin-top:1px}
+.ct-card .ct-check.done{background:var(--selva);border-color:var(--selva);color:#fff}
+.ct-card .ct-title{flex:1;font-size:13px;font-weight:600;line-height:1.4;outline:none}
+.ct-card .ct-title.done{text-decoration:line-through;color:var(--muted)}
+.ct-card-body{padding:8px 12px;flex:1}
+.ct-card-meta{font-size:11px;color:var(--muted)}
+.ct-card-foot{padding:6px 12px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.ct-card .ct-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;padding:0;opacity:.5}
+.ct-card .ct-del:hover{opacity:1;color:#d46fa0}
+.ct-tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.ct-tag.ideia{background:rgba(122,92,168,.15);color:var(--acai)}
+.ct-tag.video{background:rgba(212,111,160,.15);color:var(--boto)}
+.ct-tag.proximo{background:rgba(76,140,92,.15);color:var(--selva)}
+.ct-tag.ref{background:rgba(232,185,58,.2);color:#8a6a00}
+.ct-add-row{display:flex;gap:6px;margin-top:10px}
+.ct-add-row input{flex:1}
+
+/* ---- PRICING ---- */
+.px-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:700px){.px-grid{grid-template-columns:1fr}}
+.px-calc{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+.px-calc h3{margin-bottom:12px;font-size:15px}
+.px-field{margin-bottom:10px}
+.px-field label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:4px}
+.px-field input{width:100%}
+.px-result{background:var(--text);color:var(--bg);border-radius:10px;padding:14px 16px;text-align:center;margin-top:12px}
+.px-result .big{font-size:32px;font-weight:700;font-family:'Cambria',serif}
+.px-result .sub{font-size:12px;opacity:.7;margin-top:2px}
+.px-currency{display:flex;gap:6px;margin-bottom:12px}
+.px-currency button{flex:1;padding:6px;border-radius:6px;border:1px solid var(--line);background:var(--panel2);cursor:pointer;font-size:12px;font-weight:600}
+.px-currency button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.px-services{margin-top:20px}
+.px-services-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.px-cat{margin-bottom:16px}
+.px-cat-name{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);padding:6px 0;border-bottom:1px solid var(--line);margin-bottom:6px}
+.px-row{display:grid;grid-template-columns:1fr auto auto auto;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
+.px-row:last-child{border-bottom:none}
+.px-row .svc-name{font-size:13px}
+.px-row .svc-hrs{font-size:12px;color:var(--muted);text-align:right}
+.px-row .svc-val{font-size:13px;font-weight:600;text-align:right;min-width:80px}
+.px-row .svc-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;opacity:.4}
+.px-row .svc-del:hover{opacity:1}
+.px-packages{margin-top:20px}
+.pkg-card{background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}
+.pkg-card.featured{border-color:var(--accent)}
+.pkg-card h4{margin-bottom:6px;font-size:14px}
+.pkg-price{font-size:22px;font-weight:700;font-family:'Cambria',serif;color:var(--accent)}
+.pkg-original{font-size:12px;color:var(--muted);text-decoration:line-through;margin-left:6px}
+.pkg-items{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.6}
+.pkg-discount{display:inline-block;background:var(--ipe);color:#111;padding:2px 8px;border-radius:8px;font-size:11px;font-weight:700;margin-bottom:6px}
+.dash-fatur{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:20px}
+.dash-fatur .kpi{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center}
+.dash-fatur .kpi .val{font-size:22px;font-weight:700;font-family:'Cambria',serif}
+.dash-fatur .kpi .lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.fatur-table{width:100%;border-collapse:collapse;font-size:13px}
+.fatur-table th{text-align:left;padding:6px 8px;border-bottom:2px solid var(--line);font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.fatur-table td{padding:7px 8px;border-bottom:1px solid var(--line)}
+.fatur-table tr:last-child td{border-bottom:none}
+
+/* ---- BACKUP BTN ---- */
+.backup-bar{display:flex;gap:8px;justify-content:flex-end;margin-bottom:12px;flex-wrap:wrap}
+
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="brand"><div class="dot"></div><h1>DA PAZ · Social Hub</h1></div>
+  <nav id="tabnav">
+    <button data-tab="feed" class="active">Feed</button>
+    <button data-tab="conteudo">Conteúdo</button>
+    <button data-tab="planilha">Planejamento</button>
+    <button data-tab="prospeccao">Prospecção</button>
+    <button data-tab="anuncios">Anúncios</button>
+    <button data-tab="precificacao">Precificação</button>
+    <button data-tab="dashboard">Dashboard</button>
+  </nav>
+</header>
+
+<!-- FEED -->
+<section class="tab active" id="tab-feed">
+  <div class="card igbio">
+    <label style="cursor:pointer;position:relative" title="Clique para trocar a foto">
+      <img class="avatar" id="bioAvatar" src="" alt="">
+      <input type="file" id="bioAvatarInput" accept="image/*" style="display:none">
+    </label>
+    <div style="flex:1">
+      <div contenteditable="true" id="bioName" style="font-weight:bold">@dapaz.creater</div>
+      <div contenteditable="true" id="bioText" class="muted" style="margin:4px 0">Observe. Conecte-se. Crie. — ecossistema criativo brasileiro.</div>
+      <div class="stats">
+        <div><b contenteditable="true" id="bioPosts">0</b><span class="muted">posts</span></div>
+        <div><b contenteditable="true" id="bioFollowers">0</b><span class="muted">seguidores</span></div>
+        <div><b contenteditable="true" id="bioFollowing">0</b><span class="muted">seguindo</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="highlights" id="highlights"></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+    <span class="muted">Grade do feed — arraste para reordenar</span>
+    <button class="btn primary" onclick="openPostEditor()">+ Novo post</button>
+  </div>
+  <div class="grid3" id="feedGrid"></div>
+</section>
+
+<!-- CONTEUDO -->
+<section class="tab" id="tab-conteudo">
+  <div class="ct-section">
+    <div class="ct-section-title">
+      <span>💡 Novas ideias</span>
+      <button class="btn" onclick="addCtItemInline('ideia')">+ ideia</button>
+    </div>
+    <div class="ct-grid" id="ct-ideia-list"></div>
+  </div>
+  <div class="ct-section">
+    <div class="ct-section-title">
+      <span>🎬 Vídeos — próximas produções</span>
+      <button class="btn" onclick="addCtItemInline('video')">+ vídeo</button>
+    </div>
+    <div class="ct-grid" id="ct-video-list"></div>
+  </div>
+  <div class="ct-section">
+    <div class="ct-section-title">
+      <span>✅ Próximos passos</span>
+      <button class="btn" onclick="addCtItemInline('proximo')">+ tarefa</button>
+    </div>
+    <div class="ct-grid" id="ct-proximo-list"></div>
+  </div>
+  <div class="ct-section">
+    <div class="ct-section-title">
+      <span>🔖 Referências & inspirações</span>
+      <button class="btn" onclick="addCtItemInline('ref')">+ referência</button>
+    </div>
+    <div class="ct-grid" id="ct-ref-list"></div>
+  </div>
+</section>
+
+<!-- PLANILHA -->
+<section class="tab" id="tab-planilha">
+  <div class="filters">
+    <select id="fMonth"><option value="">Mês (todos)</option></select>
+    <select id="fType">
+      <option value="">Formato (todos)</option>
+      <option>Reel</option><option>Carrossel</option><option>Post estático</option><option>Stories</option><option>Vídeo</option><option>Live</option><option>Newsletter</option>
+    </select>
+    <select id="fPilar">
+      <option value="">Pilar (todos)</option>
+      <option>DA PAZ</option><option>Projetos</option><option>Processo</option><option>Cultura</option><option>Ideias</option><option>Matéria</option><option>IA</option><option>Artistas</option><option>Pessoas</option><option>Comercial</option>
+    </select>
+    <select id="fStatus2">
+      <option value="">Status (todos)</option>
+      <option>Ideia</option><option>Planejado</option><option>Roteiro</option><option>Produção</option><option>Edição</option><option>Aprovação</option><option>Agendado</option><option>Publicado</option><option>Arquivado</option>
+    </select>
+    <input id="fSearch" placeholder="buscar...">
+    <button class="btn primary" onclick="addRow()">+ Conteúdo</button>
+  </div>
+  <div class="tblwrap card">
+    <table>
+      <thead><tr>
+        <th>Data pub.</th><th>Mês</th><th>Canal</th><th>Pilar</th><th>Campanha</th><th>Tema / Conteúdo</th><th>Formato</th><th>Objetivo</th><th>Responsável</th><th>Prazo prod.</th><th>Status</th><th>Link criação</th><th>Link final</th><th>Obs</th><th></th>
+      </tr></thead>
+      <tbody id="sheetBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- PROSPECCAO -->
+<section class="tab" id="tab-prospeccao">
+  <div class="helpnote">Guia de prospecção — edite os scripts conforme o tom do grupo/lead. DA PAZ é uma marca criativa e cultural, mas a prospecção inicial mira um público mais corporativo.</div>
+  <div class="pgrid">
+    <div class="card scriptlist" id="scriptList"></div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <input id="scriptTitle" style="font-weight:bold;font-family:Cambria,serif;font-size:15px;border:none;background:none;width:70%">
+        <button class="btn" onclick="deleteScript()">excluir</button>
+      </div>
+      <textarea id="scriptBody" rows="10" style="margin-top:10px"></textarea>
+      <div class="muted" style="margin-top:6px">Tipo de lead / marca-alvo:</div>
+      <input id="scriptTag" style="width:100%;margin-top:4px">
+    </div>
+  </div>
+  <div style="margin-top:12px"><button class="btn primary" onclick="addScript()">+ Novo script</button></div>
+</section>
+
+<!-- ANUNCIOS -->
+<section class="tab" id="tab-anuncios">
+  <div class="helpnote">Anúncios ativos no Meta Ads. Cadastre criativo (imagem/vídeo), legenda e status. Não substitui o Gerenciador de Anúncios — é seu painel de organização.</div>
+  <button class="btn primary" onclick="openAdEditor()">+ Novo anúncio</button>
+  <div class="adgrid" id="adGrid" style="margin-top:12px"></div>
+</section>
+
+
+<!-- PRECIFICACAO -->
+<section class="tab" id="tab-precificacao">
+
+  <!-- Backup bar -->
+  <div class="backup-bar">
+    <button class="btn" onclick="exportBackup()">⬇ Exportar backup (JSON)</button>
+  </div>
+
+  <!-- Calculadora de hora -->
+  <div class="px-grid">
+    <div class="px-calc">
+      <h3>🧮 Calculadora de hora</h3>
+      <div class="px-currency">
+        <button id="btnBRL" class="active" onclick="setCurrency('BRL')">R$ Real</button>
+        <button id="btnUSD" onclick="setCurrency('USD')">$ Dólar</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="px-field"><label>Salário líquido desejado/mês</label><input type="number" id="cSalario" value="6000" oninput="calcHora()"></div>
+        <div class="px-field"><label>Horas por dia</label><input type="number" id="cHoras" value="4" oninput="calcHora()"></div>
+        <div class="px-field"><label>Dias por semana</label><input type="number" id="cDias" value="5" oninput="calcHora()"></div>
+        <div class="px-field"><label>Semanas de férias/ano</label><input type="number" id="cFerias" value="2" oninput="calcHora()"></div>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Custos mensais fixos</div>
+      <div id="custosFixos" style="margin-top:6px"></div>
+      <button class="btn" style="margin-top:6px;font-size:12px" onclick="addCusto()">+ custo</button>
+      <div class="px-result">
+        <div class="sub">Sua hora vale</div>
+        <div class="big" id="horaResult">R$ —</div>
+        <div class="sub" id="horaResultUSD" style="margin-top:4px"></div>
+        <div class="sub" style="margin-top:6px;opacity:.5">Inclui 10% para imprevistos</div>
+      </div>
+    </div>
+
+    <!-- Dashboard faturamento -->
+    <div class="px-calc">
+      <h3>📊 Faturamento</h3>
+      <div class="dash-fatur" id="faturKpis"></div>
+      <table class="fatur-table" id="faturTable">
+        <thead><tr><th>Mês</th><th>Receita</th><th>Projetos</th><th>Média/proj</th><th></th></tr></thead>
+        <tbody id="faturBody"></tbody>
+      </table>
+      <button class="btn primary" style="margin-top:10px;font-size:12px" onclick="addFaturRow()">+ Registrar mês</button>
+    </div>
+  </div>
+
+  <!-- Tabela de serviços -->
+  <div class="px-services">
+    <div class="px-services-title">
+      <span>📋 Tabela de serviços</span>
+      <div style="display:flex;gap:6px">
+        <button class="btn" onclick="addSvcCat()">+ Categoria</button>
+        <button class="btn primary" onclick="addSvc()">+ Serviço</button>
+      </div>
+    </div>
+    <div id="svcList"></div>
+  </div>
+
+  <!-- Pacotes -->
+  <div class="px-packages">
+    <div class="px-services-title">
+      <span>🎁 Pacotes</span>
+      <button class="btn primary" onclick="addPkg()">+ Pacote</button>
+    </div>
+    <div id="pkgList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px"></div>
+  </div>
+
+</section>
+
+<!-- DASHBOARD -->
+<section class="tab" id="tab-dashboard">
+  <div class="dashbar">
+    <div class="pillgroup" id="periodPills"></div>
+    <div class="pillgroup">
+      <select id="dashMonth"></select>
+      <select id="dashYear"></select>
+    </div>
+  </div>
+
+  <div id="dashEmpty" class="helpnote" style="display:none">Nenhum dado registrado ainda para este período. Clique em "Registrar dados" para adicionar.</div>
+
+  <div id="dashCurrent"></div>
+
+  <div style="margin:14px 0"><button class="btn primary" onclick="openInsightForm()">+ Registrar dados</button></div>
+
+  <div class="card" id="dashHistoryCard">
+    <h3 style="font-size:14px">Histórico do período</h3>
+    <div id="dashHistory"></div>
+  </div>
+</section>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="postModal">
+  <div class="modalbox">
+    <button class="closeBtn" onclick="closeModal()">×</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script type="module">
+// ============================================================
+// DA PAZ — Social Hub  |  Firebase Firestore (tempo real)
+// ============================================================
+
+// ---- FIREBASE CONFIG ----
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, collection, onSnapshot, setDoc, updateDoc, deleteDoc, getDoc }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD-ShgIdNfeRkvNJggsAnjCRvbTLSn77K4",
+  authDomain: "dapaz-27b30.firebaseapp.com",
+  projectId: "dapaz-27b30",
+  storageBucket: "dapaz-27b30.firebasestorage.app",
+  messagingSenderId: "415501535465",
+  appId: "1:415501535465:web:dcc7369fc53428029d0878"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+const D   = (path) => doc(db, ...path.split('/'));
+
+// sync indicator
+const dot = document.createElement('div');
+dot.style.cssText = 'position:fixed;bottom:14px;right:14px;z-index:999;width:10px;height:10px;border-radius:50%;background:#aaa;transition:background .4s;title:Conectando';
+document.body.appendChild(dot);
+const sync = (s) => { dot.style.background = s==='ok'?'#4c8c5c':s==='err'?'#d46fa0':'#aaa'; };
+
+// ---- TABS ----
+document.getElementById('tabnav').addEventListener('click', e=>{
+  if(e.target.tagName!=='BUTTON') return;
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.remove('active'));
+  e.target.classList.add('active');
+  document.getElementById('tab-'+e.target.dataset.tab).classList.add('active');
+});
+
+// ---- ESTADO LOCAL ----
+let posts=[], rows=[], ctItems={ideia:[],video:[],proximo:[],ref:[]};
+let scripts=[], curScript=0, ads=[];
+let dashData={'7':[],'14':[],'30':[],'90':[]}, curPeriod='30';
+let highlights=[];
+
+// ============================================================
+// BIO
+// ============================================================
+const BIO_IDS = ['bioName','bioText','bioPosts','bioFollowers','bioFollowing'];
+BIO_IDS.forEach(id=>{
+  const el=document.getElementById(id); if(!el) return;
+  el.addEventListener('blur', ()=> setDoc(D('hub/bio'), {[id]: el.textContent}, {merge:true}));
+});
+document.getElementById('bioAvatarInput')?.addEventListener('change', e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=ev=>{ document.getElementById('bioAvatar').src=ev.target.result; setDoc(D('hub/bio'),{bioAvatar:ev.target.result},{merge:true}); };
+  r.readAsDataURL(f);
+});
+onSnapshot(D('hub/bio'), snap=>{
+  if(!snap.exists()) return;
+  const d=snap.data();
+  BIO_IDS.forEach(id=>{ if(d[id]!=null && document.getElementById(id)) document.getElementById(id).textContent=d[id]; });
+  if(d.bioAvatar) document.getElementById('bioAvatar').src=d.bioAvatar;
+});
+
+// ============================================================
+// HIGHLIGHTS (com imagem)
+// ============================================================
+function saveHighlights(){ setDoc(D('hub/highlights'),{items:highlights}); }
+function renderHighlights(){
+  const c=document.getElementById('highlights'); c.innerHTML='';
+  highlights.forEach((h,i)=>{
+    const d=document.createElement('div'); d.className='hl';
+    const imgTag = h.img ? `<img src="${h.img}">` : '';
+    const icon = h.img ? '' : '✦';
+    d.innerHTML=`<div class="circ">${imgTag}${icon}<div class="hl-edit" onclick="hlPickImg(${i})">📷</div></div><span contenteditable="true">${h.label||''}</span>`;
+    d.querySelector('span').addEventListener('blur', e=>{highlights[i].label=e.target.textContent; saveHighlights();});
+    d.querySelector('.circ').addEventListener('dblclick', (e)=>{ if(e.target.classList.contains('hl-edit')) return; highlights.splice(i,1); saveHighlights(); });
+    c.appendChild(d);
+  });
+  const add=document.createElement('div'); add.className='hl';
+  add.innerHTML=`<div class="circ" style="border-style:dashed">+</div><span>novo</span>`;
+  add.addEventListener('click',()=>{ highlights.push({label:'Destaque',img:''}); saveHighlights(); });
+  c.appendChild(add);
+}
+window.hlPickImg = (i) => {
+  const inp=document.createElement('input'); inp.type='file'; inp.accept='image/*';
+  inp.onchange=e=>{ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=ev=>{ highlights[i].img=ev.target.result; saveHighlights(); }; r.readAsDataURL(f); };
+  inp.click();
+};
+onSnapshot(D('hub/highlights'), snap=>{
+  highlights = snap.exists() ? (snap.data().items||[{label:'Sobre'},{label:'Séries'},{label:'Bastidores'}]) : [{label:'Sobre'},{label:'Séries'},{label:'Bastidores'}];
+  renderHighlights();
+});
+
+// ============================================================
+// FEED — drag & drop
+// ============================================================
+let feedDragSrc=null;
+function renderFeed(){
+  const g=document.getElementById('feedGrid'); g.innerHTML='';
+  const bp=document.getElementById('bioPosts'); if(bp) bp.textContent=posts.length;
+  posts.forEach((p,i)=>{
+    const d=document.createElement('div'); d.className='gitem'; d.draggable=true;
+    const cover=p.media&&p.media[0];
+    d.innerHTML = cover ? (cover.type==='video'?`<video src="${cover.src}" muted></video>`:`<img src="${cover.src}">`) : `<div class="placeholder">sem mídia</div>`;
+    if(p.media&&p.media.length>1) d.innerHTML+=`<div class="badge">⧉ ${p.media.length}</div>`;
+    else if(cover&&cover.type==='video') d.innerHTML+=`<div class="badge">▶</div>`;
+    d.innerHTML+=`<div class="drag-handle">⠿</div>`;
+    d.addEventListener('dragstart',e=>{feedDragSrc=i;d.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
+    d.addEventListener('dragend',()=>document.querySelectorAll('.gitem').forEach(el=>el.classList.remove('dragging','drag-over')));
+    d.addEventListener('dragover',e=>{e.preventDefault();d.classList.add('drag-over');});
+    d.addEventListener('dragleave',()=>d.classList.remove('drag-over'));
+    d.addEventListener('drop',e=>{
+      e.preventDefault();d.classList.remove('drag-over');
+      if(feedDragSrc===null||feedDragSrc===i) return;
+      const mv=posts.splice(feedDragSrc,1)[0]; posts.splice(i,0,mv);
+      setDoc(D('hub/posts'),{items:posts});
+    });
+    d.addEventListener('click',ev=>{ if(ev.target.classList.contains('drag-handle')) return; openPostView(i); });
+    g.appendChild(d);
+  });
+  const add=document.createElement('div'); add.className='gitem addTile';
+  add.innerHTML='+'; add.addEventListener('click',()=>openPostEditor());
+  g.appendChild(add);
+}
+function openPostView(i){
+  const p=posts[i]; let mh='';
+  if(p.media&&p.media.length>1) mh=`<div class="carousel-track">${p.media.map(m=>m.type==='video'?`<video src="${m.src}" controls></video>`:`<img src="${m.src}">`).join('')}</div>`;
+  else if(p.media&&p.media.length===1){ const m=p.media[0]; mh=m.type==='video'?`<video src="${m.src}" controls></video>`:`<img src="${m.src}">`; }
+  document.getElementById('modalContent').innerHTML=`${mh}<div class="muted" style="margin-bottom:6px">${p.date||''}</div><div>${(p.caption||'').replace(/\n/g,'<br>')}</div><div style="margin-top:12px;display:flex;gap:8px"><button class="btn" onclick="editPost(${i})">editar</button><button class="btn" onclick="deletePost(${i})">excluir</button></div>`;
+  document.getElementById('postModal').classList.add('open');
+}
+window.closeModal=()=>document.getElementById('postModal').classList.remove('open');
+window.deletePost=(i)=>{ posts.splice(i,1); setDoc(D('hub/posts'),{items:posts}); closeModal(); };
+window.editPost=(i)=>openPostEditor(i);
+function openPostEditor(i){
+  const editing=i!==undefined, p=editing?posts[i]:{media:[],caption:'',date:new Date().toISOString().slice(0,10)};
+  document.getElementById('modalContent').innerHTML=`
+    <h3 style="font-family:Cambria,serif">${editing?'Editar post':'Novo post'}</h3>
+    <input type="file" id="mediaInput" accept="image/*,video/*" multiple style="margin-bottom:8px">
+    <div id="mediaPreview" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px"></div>
+    <input id="postDate" type="date" value="${p.date}" style="margin-bottom:8px;width:100%">
+    <textarea id="postCaption" rows="4" placeholder="Legenda...">${p.caption||''}</textarea>
+    <div style="margin-top:10px;display:flex;gap:8px">
+      <button class="btn primary" onclick="savePost(${editing?i:'undefined'})">salvar</button>
+      <button class="btn" onclick="closeModal()">cancelar</button>
+    </div>`;
+  let tempMedia=editing?[...p.media]:[];
+  const preview=document.getElementById('mediaPreview');
+  let ciDrag=null;
+  function rp(){
+    if(tempMedia.length<=1){
+      preview.style.flexDirection='';
+      preview.innerHTML=tempMedia.map((m,idx)=>`<div style="position:relative">${m.type==='video'?`<video src="${m.src}" style="width:60px;height:60px;object-fit:cover"></video>`:`<img src="${m.src}" style="width:60px;height:60px;object-fit:cover">`}<span onclick="window._rm(${idx})" style="position:absolute;top:-4px;right:-4px;background:#000;border-radius:50%;width:16px;height:16px;font-size:11px;text-align:center;cursor:pointer;color:#fff;line-height:16px">×</span></div>`).join('');
+      return;
+    }
+    preview.style.flexDirection='column'; preview.innerHTML='';
+    tempMedia.forEach((m,idx)=>{
+      const it=document.createElement('div'); it.className='ci-item'; it.draggable=true;
+      it.innerHTML=`<span class="ci-handle">⠿</span>${m.type==='video'?`<video src="${m.src}"></video>`:`<img src="${m.src}">`}<span style="flex:1;font-size:12px;color:var(--muted)">Slide ${idx+1}</span><span onclick="window._rm(${idx})" style="cursor:pointer;color:var(--muted);font-size:13px">✕</span>`;
+      it.addEventListener('dragstart',e=>{ciDrag=idx;it.classList.add('ci-dragging');e.dataTransfer.effectAllowed='move';});
+      it.addEventListener('dragend',()=>preview.querySelectorAll('.ci-item').forEach(el=>el.classList.remove('ci-dragging')));
+      it.addEventListener('dragover',e=>e.preventDefault());
+      it.addEventListener('drop',e=>{e.preventDefault();if(ciDrag===null||ciDrag===idx)return;const mv=tempMedia.splice(ciDrag,1)[0];tempMedia.splice(idx,0,mv);rp();});
+      preview.appendChild(it);
+    });
+  }
+  window._rm=idx=>{tempMedia.splice(idx,1);rp();};
+  rp();
+  document.getElementById('mediaInput').addEventListener('change',e=>{
+    [...e.target.files].forEach(f=>{const r=new FileReader();r.onload=ev=>{tempMedia.push({type:f.type.startsWith('video')?'video':'image',src:ev.target.result});rp();};r.readAsDataURL(f);});
+  });
+  window._savePost=(idx)=>{
+    const data={media:tempMedia,caption:document.getElementById('postCaption').value,date:document.getElementById('postDate').value};
+    if(idx!==undefined) posts[idx]=data; else posts.push(data);
+    setDoc(D('hub/posts'),{items:posts}); closeModal();
+  };
+  document.getElementById('postModal').classList.add('open');
+}
+window.savePost=(i)=>window._savePost(i);
+onSnapshot(D('hub/posts'),snap=>{ posts=snap.exists()?(snap.data().items||[]):[];renderFeed(); });
+
+// ============================================================
+// PLANILHA
+// ============================================================
+const PILARES=['DA PAZ','Projetos','Processo','Cultura','Ideias','Matéria','IA','Artistas','Pessoas','Comercial'];
+const FORMATOS=['Reel','Carrossel','Post estático','Stories','Vídeo','Live','Newsletter'];
+const STATUSES=['Ideia','Planejado','Roteiro','Produção','Edição','Aprovação','Agendado','Publicado','Arquivado'];
+const CANAIS=['Instagram','TikTok','YouTube','LinkedIn','Pinterest','Site','Newsletter','WhatsApp'];
+const OBJETIVOS=['Branding','Autoridade','Conexão','Conversão','Engajamento','Alcance','Vendas'];
+const SC={Ideia:'var(--muted)',Planejado:'var(--arara)',Roteiro:'var(--acai)',Produção:'var(--boto)',Edição:'var(--onca)',Aprovação:'var(--ipe)',Agendado:'var(--selva)',Publicado:'var(--selva)',Arquivado:'var(--muted)'};
+function so(arr,v){return arr.map(t=>`<option ${v===t?'selected':''}>${t}</option>`).join('');}
+function renderSheet(){
+  const fm=document.getElementById('fMonth')?.value||'',ft=document.getElementById('fType')?.value||'',fp=document.getElementById('fPilar')?.value||'',fst=document.getElementById('fStatus2')?.value||'',fs=(document.getElementById('fSearch')?.value||'').toLowerCase();
+  const mSel=document.getElementById('fMonth'); if(mSel){const cur=mSel.value;const ms=new Set();rows.forEach(r=>{if(r.date&&r.date.match(/^\d{4}-\d{2}/))ms.add(r.date.slice(0,7));});const MN=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];mSel.innerHTML='<option value="">Mês (todos)</option>'+[...ms].sort().map(m=>{const[y,mo]=m.split('-');return `<option value="${m}">${MN[parseInt(mo)-1]} ${y}</option>`;}).join('');mSel.value=cur;}
+  const tb=document.getElementById('sheetBody'); if(!tb) return; tb.innerHTML='';
+  rows.forEach((r,i)=>{
+    if(fm&&!(r.date||'').match(/^\d{4}-\d{2}/)&&fm){}else if(fm&&!(r.date||'').startsWith(fm))return;
+    if(ft&&r.type!==ft)return;
+    if(fp&&r.pilar!==fp)return;
+    if(fst&&r.status!==fst)return;
+    if(fs&&!((r.tema||'')+(r.campanha||'')+(r.obs||'')).toLowerCase().includes(fs))return;
+    const tr=document.createElement('tr');
+    const MN2=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    const mesLabel = r.date&&r.date.match(/^\d{4}-\d{2}/) ? MN2[parseInt(r.date.slice(5,7))-1]+' '+r.date.slice(0,4) : '—';
+    tr.innerHTML=`
+      <td><input type="date" data-f="date" value="${r.date||''}" style="border:none;background:transparent;color:var(--text);font-size:13px;width:120px"></td>
+      <td style="min-width:70px;color:var(--muted);font-size:12px">${mesLabel}</td>
+      <td><select data-f="canal">${so(CANAIS,r.canal||'Instagram')}</select></td>
+      <td><select data-f="pilar">${so(PILARES,r.pilar||'DA PAZ')}</select></td>
+      <td contenteditable="true" data-f="campanha" style="min-width:90px">${r.campanha||''}</td>
+      <td contenteditable="true" data-f="tema" style="min-width:130px">${r.tema||''}</td>
+      <td><select data-f="type">${so(FORMATOS,r.type||'Reel')}</select></td>
+      <td><select data-f="objetivo">${so(OBJETIVOS,r.objetivo||'Branding')}</select></td>
+      <td contenteditable="true" data-f="resp" style="min-width:70px">${r.resp||''}</td>
+      <td contenteditable="true" data-f="prazo" style="min-width:90px">${r.prazo||''}</td>
+      <td><select data-f="status" style="color:#fff;background:${SC[r.status||'Ideia']}">${so(STATUSES,r.status||'Ideia')}</select></td>
+      <td contenteditable="true" data-f="linkCriacao" style="min-width:80px">${r.linkCriacao||''}</td>
+      <td contenteditable="true" data-f="linkFinal" style="min-width:80px">${r.linkFinal||''}</td>
+      <td contenteditable="true" data-f="obs" style="min-width:100px">${r.obs||''}</td>
+      <td><button class="rowdel" onclick="delRow(${i})">✕</button></td>`;
+    tr.querySelectorAll('[data-f]').forEach(el=>{
+      el.addEventListener(el.tagName==='SELECT'||el.type==='date'?'change':'blur',()=>{
+        rows[i][el.dataset.f]=el.tagName==='SELECT'?el.value:el.textContent;
+        if(el.dataset.f==='status') el.style.background=SC[el.value]||'var(--muted)';
+        setDoc(D('hub/sheet'),{items:rows});
+      });
+    });
+    tb.appendChild(tr);
+  });
+}
+window.addRow=()=>{rows.push({date:new Date().toISOString().slice(0,10),canal:'Instagram',pilar:'DA PAZ',type:'Reel',objetivo:'Branding',status:'Ideia'});setDoc(D('hub/sheet'),{items:rows});renderSheet();};
+window.delRow=(i)=>{rows.splice(i,1);setDoc(D('hub/sheet'),{items:rows});};
+['fMonth','fType','fPilar','fStatus2','fSearch'].forEach(id=>document.getElementById(id)?.addEventListener('input',renderSheet));
+onSnapshot(D('hub/sheet'),snap=>{rows=snap.exists()?(snap.data().items||[]):[];renderSheet();});
+
+// ============================================================
+// CONTEÚDO
+// ============================================================
+function saveCt(){setDoc(D('hub/conteudo'),ctItems);}
+function renderCtSection(type){
+  const list=document.getElementById('ct-'+type+'-list'); if(!list) return;
+  list.innerHTML='';
+  (ctItems[type]||[]).forEach((item,i)=>{
+    const div=document.createElement('div'); div.className='ct-card';
+    const done=!!item.done;
+    div.innerHTML=`<div class="ct-check ${done?'done':''}" onclick="toggleCt('${type}',${i})">${done?'✓':''}</div><div class="ct-body"><div class="ct-title ${done?'done':''}" contenteditable="true" onblur="editCt('${type}',${i},this.textContent)">${item.title||''}</div><div class="ct-meta">${item.meta||''}</div></div><button class="ct-del" onclick="delCt('${type}',${i})">✕</button>`;
+    list.appendChild(div);
+  });
+  const ar=document.createElement('div'); ar.className='ct-add';
+  ar.innerHTML=`<input placeholder="Adicionar..." id="ctI_${type}" onkeydown="if(event.key==='Enter')addCtInline('${type}')"><button class="btn" onclick="addCtInline('${type}')">+</button>`;
+  list.appendChild(ar);
+}
+function renderAllCt(){['ideia','video','proximo','ref'].forEach(renderCtSection);}
+window.toggleCt=(t,i)=>{ctItems[t][i].done=!ctItems[t][i].done;saveCt();};
+window.delCt=(t,i)=>{ctItems[t].splice(i,1);saveCt();};
+window.editCt=(t,i,v)=>{ctItems[t][i].title=v;saveCt();};
+window.addCtInline=(type)=>{
+  const inp=document.getElementById('ctI_'+type); if(!inp||!inp.value.trim()) return;
+  if(!ctItems[type])ctItems[type]=[];
+  ctItems[type].push({title:inp.value.trim(),meta:new Date().toLocaleDateString('pt-BR')});
+  saveCt(); inp.value='';
+};
+window.addCtItem=(type)=>{if(!ctItems[type])ctItems[type]=[];ctItems[type].push({title:'',meta:''});saveCt();};
+onSnapshot(D('hub/conteudo'),snap=>{
+  if(snap.exists()){const d=snap.data();ctItems={ideia:d.ideia||[],video:d.video||[],proximo:d.proximo||[],ref:d.ref||[]};}
+  else ctItems={ideia:[],video:[],proximo:[],ref:[]};
+  renderAllCt();
+});
+
+// ============================================================
+// PROSPECÇÃO
+// ============================================================
+const DS=[
+  {title:'Abordagem fria — corporativo',tag:'Empresas de médio porte',body:'Olá [nome], tudo bem? Vi o trabalho da [empresa] e achei muito alinhado com o que a gente faz na DA PAZ — criação, direção de arte e conteúdo com identidade própria. Será que faz sentido uma conversa rápida sobre como podemos ajudar a fortalecer a presença digital de vocês?'},
+  {title:'Follow-up sem resposta',tag:'Qualquer lead',body:'Oi [nome], só passando pra saber se chegou a ver minha mensagem anterior. Sem pressa nenhuma — fico à disposição se quiser trocar uma ideia sobre conteúdo/identidade visual.'},
+  {title:'Após indicação',tag:'Indicações',body:'Oi [nome]! O [indicador] comentou que vocês estão buscando repaginar a comunicação — trabalho com isso na DA PAZ, um estúdio criativo com foco em identidade e conteúdo autoral. Posso te mandar alguns cases?'}
+];
+function renderScripts(){
+  const l=document.getElementById('scriptList'); if(!l) return; l.innerHTML='';
+  scripts.forEach((s,i)=>{
+    const b=document.createElement('button'); b.className='btn'+(i===curScript?' active':''); b.textContent=s.title||'(sem título)';
+    b.addEventListener('click',()=>{curScript=i;renderScripts();loadScript();});
+    l.appendChild(b);
+  });
+}
+function loadScript(){
+  const s=scripts[curScript]; if(!s) return;
+  const m={scriptTitle:'title',scriptBody:'body',scriptTag:'tag'};
+  Object.keys(m).forEach(id=>{const el=document.getElementById(id);if(el)el.value=s[m[id]]||'';});
+}
+function saveScripts(){setDoc(D('hub/scripts'),{items:scripts});}
+['scriptTitle','scriptBody','scriptTag'].forEach(id=>{
+  document.getElementById(id)?.addEventListener('blur',()=>{
+    const m={scriptTitle:'title',scriptBody:'body',scriptTag:'tag'};
+    if(scripts[curScript])scripts[curScript][m[id]]=document.getElementById(id).value;
+    saveScripts();renderScripts();
+  });
+});
+window.addScript=()=>{scripts.push({title:'Novo script',body:'',tag:''});curScript=scripts.length-1;saveScripts();};
+window.deleteScript=()=>{if(scripts.length<=1)return;scripts.splice(curScript,1);curScript=0;saveScripts();};
+onSnapshot(D('hub/scripts'),snap=>{scripts=snap.exists()?(snap.data().items||DS):DS;renderScripts();loadScript();});
+
+// ============================================================
+// ANÚNCIOS
+// ============================================================
+function renderAds(){
+  const g=document.getElementById('adGrid'); if(!g) return; g.innerHTML='';
+  ads.forEach((a,i)=>{
+    const c=document.createElement('div'); c.className='card';
+    c.innerHTML=`${a.media?(a.media.type==='video'?`<video src="${a.media.src}" style="width:100%;border-radius:6px;margin-bottom:6px" muted></video>`:`<img src="${a.media.src}" style="width:100%;border-radius:6px;margin-bottom:6px">`):''}
+      <div style="font-weight:bold">${a.name||'Sem nome'}</div><div class="muted" style="margin:4px 0">${a.caption||''}</div>
+      <span style="font-size:12px;color:var(--muted)">${a.status||'Ativo'}</span>
+      <div style="margin-top:8px;display:flex;gap:6px"><button class="btn" onclick="editAd(${i})">editar</button><button class="btn" onclick="delAd(${i})">excluir</button></div>`;
+    g.appendChild(c);
+  });
+}
+function saveAds(){setDoc(D('hub/ads'),{items:ads});}
+window.delAd=(i)=>{ads.splice(i,1);saveAds();};
+window.editAd=(i)=>openAdEditor(i);
+function openAdEditor(i){
+  const editing=i!==undefined,a=editing?ads[i]:{status:'Ativo'};
+  document.getElementById('modalContent').innerHTML=`
+    <h3 style="font-family:Cambria,serif">${editing?'Editar anúncio':'Novo anúncio'}</h3>
+    <input type="file" id="adMedia" accept="image/*,video/*" style="margin-bottom:8px">
+    <input id="adName" placeholder="Nome da campanha" value="${a.name||''}" style="width:100%;margin-bottom:8px">
+    <textarea id="adCaption" rows="3" placeholder="Legenda">${a.caption||''}</textarea>
+    <select id="adStatus" style="width:100%;margin-top:8px">${['Ativo','Pausado','Encerrado'].map(s=>`<option ${a.status===s?'selected':''}>${s}</option>`).join('')}</select>
+    <div style="margin-top:10px;display:flex;gap:8px"><button class="btn primary" onclick="saveAd(${editing?i:'undefined'})">salvar</button><button class="btn" onclick="closeModal()">cancelar</button></div>`;
+  let tm=a.media;
+  document.getElementById('adMedia')?.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{tm={type:f.type.startsWith('video')?'video':'image',src:ev.target.result};};r.readAsDataURL(f);});
+  window._saveAd=(idx)=>{const data={name:document.getElementById('adName').value,caption:document.getElementById('adCaption').value,status:document.getElementById('adStatus').value,media:tm};if(idx!==undefined)ads[idx]=data;else ads.push(data);saveAds();closeModal();};
+  document.getElementById('postModal').classList.add('open');
+}
+window.saveAd=(i)=>window._saveAd(i);
+onSnapshot(D('hub/ads'),snap=>{ads=snap.exists()?(snap.data().items||[]):[];renderAds();});
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+const PERIODS=[['7','7 dias'],['14','14 dias'],['30','30 dias'],['90','90 dias']];
+const MONTHS=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const TL=['12a','3a','6a','9a','12p','3p','6p','9p'];
+function renderPeriodPills(){
+  const c=document.getElementById('periodPills');if(!c)return;c.innerHTML='';
+  PERIODS.forEach(([val,label])=>{const b=document.createElement('button');b.textContent=label;if(val===curPeriod)b.classList.add('active');b.addEventListener('click',()=>{curPeriod=val;renderPeriodPills();renderDash();});c.appendChild(b);});
+}
+function populateMonthYear(){
+  const mS=document.getElementById('dashMonth'),yS=document.getElementById('dashYear');
+  if(!mS||mS.options.length)return;
+  mS.innerHTML='<option value="">Mês (todos)</option>'+MONTHS.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
+  yS.innerHTML='<option value="">Ano (todos)</option>'+[2024,2025,2026,2027].map(y=>`<option value="${y}">${y}</option>`).join('');
+  mS.addEventListener('change',renderDash);yS.addEventListener('change',renderDash);
+}
+function donut(p,a,b){return `background:conic-gradient(${a} 0% ${p}%,${b} ${p}% 100%)`;}
+function barRow(l,p){return `<div class="barrow"><div class="lbl"><span>${l}</span><span>${p}%</span></div><div class="track"><div class="fill" style="width:${p}%"></div></div></div>`;}
+function renderDash(){
+  populateMonthYear();
+  const fm=document.getElementById('dashMonth')?.value||'',fy=document.getElementById('dashYear')?.value||'';
+  let entries=(dashData[curPeriod]||[]).filter(e=>(!fm||String(e.month)===fm)&&(!fy||String(e.year)===fy)).sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+  const cur=document.getElementById('dashCurrent'),emp=document.getElementById('dashEmpty');
+  if(!cur)return;
+  if(!entries.length){cur.innerHTML='';if(emp)emp.style.display='block';renderHistory([]);return;}
+  if(emp)emp.style.display='none';
+  const e=entries[entries.length-1],mx=Math.max(...e.activeTimes);
+  cur.innerHTML=`<div class="insightGrid">
+    <div class="card insightCard"><h4>Views</h4><div class="big">${e.views}</div><div class="donutrow"><div class="donut" style="${donut(e.viewsFollowersPct,'var(--text)','var(--panel2)')}"></div><div class="donutlegend"><div><span class="sw" style="background:var(--text)"></span>Followers ${e.viewsFollowersPct}%</div><div><span class="sw" style="background:var(--panel2);border:1px solid var(--line)"></span>Non-followers ${(100-e.viewsFollowersPct).toFixed(1)}%</div></div></div><div class="muted" style="margin-top:8px">Viewers: <b>${e.viewers}</b></div></div>
+    <div class="card insightCard"><h4>By content type</h4><div class="barlist">${barRow('Reels',e.contentType.reels)}${barRow('Posts',e.contentType.posts)}${barRow('Stories',e.contentType.stories)}</div></div>
+    <div class="card insightCard"><h4>Interactions</h4><div class="big">${e.interactions}</div><div class="donutrow"><div class="donut" style="${donut(e.interactionsFollowersPct,'var(--text)','var(--panel2)')}"></div><div class="donutlegend"><div><span class="sw" style="background:var(--text)"></span>Followers ${e.interactionsFollowersPct}%</div><div><span class="sw" style="background:var(--panel2);border:1px solid var(--line)"></span>Non-followers ${(100-e.interactionsFollowersPct).toFixed(1)}%</div></div></div><div class="muted" style="margin-top:8px">Accounts engaged: <b>${e.accountsEngaged}</b></div></div>
+    <div class="card insightCard"><h4>By content interactions</h4><div class="barlist">${barRow('Reels',e.contentInteractions.reels)}${barRow('Posts',e.contentInteractions.posts)}</div></div>
+    <div class="card insightCard"><h4>Profile activity</h4><div class="big">${e.profileVisits}</div><div class="muted">Profile visits</div><div style="margin-top:8px">${e.externalLinkTaps}</div><div class="muted">External link taps</div></div>
+    <div class="card insightCard"><h4>Followers</h4><div class="big">${e.totalFollowers}</div><div class="muted">Total followers</div></div>
+    <div class="card insightCard" style="grid-column:1/-1"><h4>Most active times</h4><div class="timesChart">${e.activeTimes.map((v,i)=>`<div class="timesWrap"><div class="tbar" style="height:90px"><div class="fill" style="height:${(v/mx*100).toFixed(0)}%"></div></div><div class="tlabel">${TL[i]}<br>${v}</div></div>`).join('')}</div></div>
+  </div>`;
+  renderHistory(entries);
+}
+function renderHistory(entries){
+  const h=document.getElementById('dashHistory');if(!h)return;
+  if(!entries.length){h.innerHTML='<div class="muted">—</div>';return;}
+  h.innerHTML=entries.slice().reverse().map((e,ri)=>{const idx=entries.length-1-ri;return `<div class="histItem"><span>${e.date} — views ${e.views} · interações ${e.interactions} · seguidores ${e.totalFollowers}</span><span class="meta">${MONTHS[e.month-1]||''}/${e.year}<button onclick="delInsight(${idx})">✕</button></span></div>`;}).join('');
+}
+window.delInsight=(realIdx)=>{
+  const fm=document.getElementById('dashMonth')?.value||'',fy=document.getElementById('dashYear')?.value||'';
+  const all=dashData[curPeriod]||[];
+  const filtered=all.filter(e=>(!fm||String(e.month)===fm)&&(!fy||String(e.year)===fy)).sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+  const pos=all.indexOf(filtered[realIdx]);
+  if(pos>-1){all.splice(pos,1);setDoc(D('hub/dash'),dashData);renderDash();}
+};
+window.openInsightForm=()=>{
+  const today=new Date().toISOString().slice(0,10);
+  document.getElementById('modalContent').innerHTML=`
+    <h3 style="font-family:Cambria,serif">Registrar dados — ${PERIODS.find(p=>p[0]===curPeriod)[1]}</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <label>Data<input type="date" id="iDate" value="${today}"></label>
+      <label>Total followers<input type="number" id="iTF" value="779"></label>
+      <label>Views<input type="number" id="iV"></label>
+      <label>Views % followers<input type="number" step="0.1" id="iVP"></label>
+      <label>Viewers<input type="number" id="iVw"></label>
+      <label>Interactions<input type="number" id="iI"></label>
+      <label>Interactions % followers<input type="number" step="0.1" id="iIP"></label>
+      <label>Accounts engaged<input type="number" id="iE"></label>
+      <label>Profile visits<input type="number" id="iPV"></label>
+      <label>External link taps<input type="number" id="iEL"></label>
+    </div>
+    <div class="muted" style="margin:10px 0 4px">By content type (%)</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+      <label>Reels<input type="number" step="0.1" id="iCR"></label>
+      <label>Posts<input type="number" step="0.1" id="iCP"></label>
+      <label>Stories<input type="number" step="0.1" id="iCS"></label>
+    </div>
+    <div class="muted" style="margin:10px 0 4px">By content interactions (%)</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <label>Reels<input type="number" step="0.1" id="iIR"></label>
+      <label>Posts<input type="number" step="0.1" id="iIPp"></label>
+    </div>
+    <div class="muted" style="margin:10px 0 4px">Most active times</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+      ${TL.map((t,i)=>`<label style="font-size:11px">${t}<input type="number" id="iT${i}"></label>`).join('')}
+    </div>
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button class="btn primary" onclick="saveInsight()">salvar</button>
+      <button class="btn" onclick="closeModal()">cancelar</button>
+    </div>`;
+  document.getElementById('postModal').classList.add('open');
+};
+window.saveInsight=()=>{
+  const v=id=>parseFloat(document.getElementById(id)?.value)||0;
+  const date=document.getElementById('iDate')?.value||new Date().toISOString().slice(0,10);
+  const d=new Date(date);
+  const entry={date,month:d.getMonth()+1,year:d.getFullYear(),views:v('iV'),viewsFollowersPct:v('iVP'),viewers:v('iVw'),contentType:{reels:v('iCR'),posts:v('iCP'),stories:v('iCS')},interactions:v('iI'),interactionsFollowersPct:v('iIP'),accountsEngaged:v('iE'),contentInteractions:{reels:v('iIR'),posts:v('iIPp')},profileVisits:v('iPV'),externalLinkTaps:v('iEL'),totalFollowers:v('iTF'),activeTimes:TL.map((_,i)=>v('iT'+i))};
+  if(!dashData[curPeriod])dashData[curPeriod]=[];
+  dashData[curPeriod].push(entry);
+  setDoc(D('hub/dash'),dashData);
+  closeModal();renderDash();
+};
+onSnapshot(D('hub/dash'),snap=>{
+  if(snap.exists()){dashData=snap.data();}
+  else{
+    const today=new Date().toISOString().slice(0,10);
+    const mk=o=>Object.assign({date:today,month:9,year:2026,activeTimes:[97,294,416,430,435,433,338,117]},o);
+    dashData={'7':[mk({views:48,viewsFollowersPct:25,viewers:8,contentType:{reels:100,posts:0,stories:0},interactions:5,interactionsFollowersPct:20,accountsEngaged:4,contentInteractions:{reels:100,posts:0},profileVisits:8,externalLinkTaps:1,totalFollowers:779})],'14':[],'30':[mk({views:160,viewsFollowersPct:15,viewers:36,contentType:{reels:95,posts:2.5,stories:2.5},interactions:10,interactionsFollowersPct:40,accountsEngaged:7,contentInteractions:{reels:90,posts:10},profileVisits:36,externalLinkTaps:1,totalFollowers:779})],'90':[mk({views:626,viewsFollowersPct:20.6,viewers:116,contentType:{reels:96.6,posts:1.5,stories:1.9},interactions:28,interactionsFollowersPct:28.6,accountsEngaged:25,contentInteractions:{reels:89.3,posts:10.7},profileVisits:124,externalLinkTaps:2,totalFollowers:779})]};
+    setDoc(D('hub/dash'),dashData);
+  }
+  renderPeriodPills();renderDash();
+});
+
+document.getElementById('postModal').addEventListener('click',e=>{if(e.target.id==='postModal')closeModal();});
+sync('ok');
+</script>
+</body>
+</html>
+<script>
+// ============================================================
+// PATCH v4 — Conteúdo cards + Precificação
+// ============================================================
+
+// Override renderCtSection to use card grid
+function renderCtSection(type){
+  const list=document.getElementById('ct-'+type+'-list'); if(!list) return;
+  list.innerHTML='';
+  const TAGS={ideia:'ideia',video:'video',proximo:'proximo',ref:'ref'};
+  const LABELS={ideia:'Ideia',video:'Vídeo',proximo:'Tarefa',ref:'Ref'};
+  (ctItems[type]||[]).forEach((item,i)=>{
+    const done=!!item.done;
+    const div=document.createElement('div'); div.className='ct-card';
+    div.innerHTML=`
+      <div class="ct-card-head">
+        <div class="ct-check ${done?'done':''}" onclick="toggleCt('${type}',${i})">${done?'✓':''}</div>
+        <div class="ct-title ${done?'done':''}" contenteditable="true" onblur="editCt('${type}',${i},this.textContent)">${item.title||'Nova entrada'}</div>
+      </div>
+      <div class="ct-card-body">
+        <div class="ct-card-meta" contenteditable="true" onblur="editCtMeta('${type}',${i},this.textContent)">${item.meta||''}</div>
+      </div>
+      <div class="ct-card-foot">
+        <span class="ct-tag ${TAGS[type]}">${LABELS[type]}</span>
+        <button class="ct-del" onclick="delCt('${type}',${i})">✕</button>
+      </div>`;
+    list.appendChild(div);
+  });
+  // quick add card
+  const add=document.createElement('div');
+  add.style.cssText='background:var(--panel2);border:1.5px dashed var(--line);border-radius:12px;padding:12px;display:flex;gap:6px;align-items:center;';
+  add.innerHTML=`<input placeholder="Adicionar..." id="ctI2_${type}" style="flex:1" onkeydown="if(event.key==='Enter')addCtInlineCard('${type}')"><button class="btn" onclick="addCtInlineCard('${type}')">+</button>`;
+  list.appendChild(add);
+}
+window.addCtInlineCard=(type)=>{
+  const inp=document.getElementById('ctI2_'+type); if(!inp||!inp.value.trim()) return;
+  if(!ctItems[type])ctItems[type]=[];
+  ctItems[type].push({title:inp.value.trim(),meta:new Date().toLocaleDateString('pt-BR')});
+  saveCt(); inp.value='';
+};
+window.editCtMeta=(t,i,v)=>{ctItems[t][i].meta=v;saveCt();};
+// re-alias addCtItemInline to card version
+window.addCtItemInline=(type)=>{ if(!ctItems[type])ctItems[type]=[]; ctItems[type].push({title:'',meta:new Date().toLocaleDateString('pt-BR')}); saveCt(); };
+
+// ============================================================
+// PRECIFICAÇÃO
+// ============================================================
+let pxCurrency='BRL';
+let usdRate=5.8; // fallback rate
+let custosData=JSON.parse(localStorage.getItem('px_custos')||'[{"label":"Energia","val":200},{"label":"Internet","val":120},{"label":"Celular","val":150},{"label":"Alimentação","val":1000},{"label":"Transporte","val":350},{"label":"Pacote Adobe","val":124},{"label":"Aluguel","val":6000}]');
+let svcData=JSON.parse(localStorage.getItem('px_svc')||'null') || [
+  {cat:'Identidade Visual',items:[
+    {name:'Pacote Identidade Visual Básico',hrs:20,brl:2800},{name:'Pacote Identidade Visual Intermediário',hrs:30,brl:4200},{name:'Pacote Identidade Visual Completo',hrs:45,brl:6500}]},
+  {cat:'Criação de Logo',items:[
+    {name:'Logo para Empresa',hrs:10,brl:900},{name:'Redesign de Logo',hrs:8,brl:600},{name:'Vetorização de Logo',hrs:4,brl:380},{name:'Manual de Uso (Logo)',hrs:4,brl:380}]},
+  {cat:'Social Media',items:[
+    {name:'Arte avulsa (feed)',hrs:1,brl:35},{name:'Arte avulsa (story)',hrs:0.5,brl:15},{name:'Carrossel (até 10 imgs)',hrs:3,brl:100},{name:'Reels / Convite Animado',hrs:5,brl:150},{name:'Padronização de Mídia Social',hrs:12,brl:480}]},
+  {cat:'Planos Mensais',items:[
+    {name:'Plano Rede Ativa',hrs:20,brl:320},{name:'Plano Rede Ativa Plus',hrs:30,brl:480},{name:'Plano Poste Todo Dia!',hrs:40,brl:640}]},
+  {cat:'Sites',items:[
+    {name:'Landing Page',hrs:40,brl:1000},{name:'Site Institucional',hrs:80,brl:1800},{name:'E-commerce',hrs:120,brl:2500}]},
+  {cat:'Editorial',items:[
+    {name:'Lookbook Design (15-20 págs)',hrs:25,brl:1800},{name:'Livro Editorial (até 50 págs)',hrs:55,brl:3500},{name:'Diagramação e-Book (até 20 págs)',hrs:15,brl:200}]}
+];
+let pkgData=JSON.parse(localStorage.getItem('px_pkg')||'null') || [
+  {name:'Pacote Lançamento',disc:15,items:['Logo para Empresa','Landing Page','Padronização de Mídia Social'],featured:false},
+  {name:'Pacote Identidade Completa',disc:20,items:['Pacote Identidade Visual Completo','Manual de Uso (Logo)','Padronização de Mídia Social'],featured:true},
+  {name:'Pacote Social Mensal',disc:10,items:['Plano Rede Ativa Plus','Arte avulsa (feed)','Arte avulsa (story)'],featured:false}
+];
+let faturData=JSON.parse(localStorage.getItem('px_fatur')||'[]');
+
+window.setCurrency=(c)=>{
+  pxCurrency=c;
+  document.getElementById('btnBRL').classList.toggle('active',c==='BRL');
+  document.getElementById('btnUSD').classList.toggle('active',c==='USD');
+  calcHora(); renderSvc(); renderPkgs(); renderFatur();
+};
+
+function fmt(val){
+  if(pxCurrency==='USD') return '$'+(val/usdRate).toFixed(2);
+  return 'R$ '+val.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function calcHora(){
+  const sal=parseFloat(document.getElementById('cSalario')?.value)||0;
+  const hpd=parseFloat(document.getElementById('cHoras')?.value)||4;
+  const dpw=parseFloat(document.getElementById('cDias')?.value)||5;
+  const ferSem=parseFloat(document.getElementById('cFerias')?.value)||2;
+  const totalCustos=custosData.reduce((a,c)=>a+(parseFloat(c.val)||0),0);
+  const totalMes=sal+totalCustos;
+  const semanasAno=52-ferSem;
+  const hrsAno=hpd*dpw*semanasAno;
+  const hrsMes=hrsAno/12;
+  const hora=(totalMes/hrsMes)*1.1;
+  const el=document.getElementById('horaResult');
+  const el2=document.getElementById('horaResultUSD');
+  if(el){
+    el.textContent = isFinite(hora)?'R$ '+hora.toFixed(2):'—';
+    el2.textContent = isFinite(hora)?'≈ $'+(hora/usdRate).toFixed(2)+' USD':'';
+  }
+  localStorage.setItem('px_horaCalc', JSON.stringify({sal,hpd,dpw,ferSem,totalCustos,hora}));
+  renderSvc();
+}
+
+function renderCustos(){
+  const c=document.getElementById('custosFixos'); if(!c) return;
+  c.innerHTML='';
+  custosData.forEach((cu,i)=>{
+    const row=document.createElement('div');
+    row.style.cssText='display:grid;grid-template-columns:1fr auto auto;gap:6px;margin-bottom:4px;align-items:center';
+    row.innerHTML=`<input value="${cu.label}" style="font-size:12px" onblur="custosData[${i}].label=this.value;savePx();calcHora()">
+      <input type="number" value="${cu.val}" style="width:80px;font-size:12px" onblur="custosData[${i}].val=parseFloat(this.value)||0;savePx();calcHora()">
+      <button onclick="custosData.splice(${i},1);savePx();renderCustos();calcHora()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px">✕</button>`;
+    c.appendChild(row);
+  });
+}
+window.addCusto=()=>{ custosData.push({label:'Novo custo',val:0}); savePx(); renderCustos(); calcHora(); };
+
+function savePx(){
+  localStorage.setItem('px_custos',JSON.stringify(custosData));
+  localStorage.setItem('px_svc',JSON.stringify(svcData));
+  localStorage.setItem('px_pkg',JSON.stringify(pkgData));
+  localStorage.setItem('px_fatur',JSON.stringify(faturData));
+}
+
+function getHora(){
+  const d=JSON.parse(localStorage.getItem('px_horaCalc')||'{}');
+  return d.hora||137;
+}
+
+function renderSvc(){
+  const c=document.getElementById('svcList'); if(!c) return; c.innerHTML='';
+  svcData.forEach((cat,ci)=>{
+    const div=document.createElement('div'); div.className='px-cat';
+    div.innerHTML=`<div class="px-cat-name" contenteditable="true" onblur="svcData[${ci}].cat=this.textContent;savePx()">${cat.cat}</div>`;
+    (cat.items||[]).forEach((svc,si)=>{
+      const row=document.createElement('div'); row.className='px-row';
+      const valBRL=svc.brl||(svc.hrs*(getHora())||0);
+      row.innerHTML=`
+        <div class="svc-name" contenteditable="true" onblur="svcData[${ci}].items[${si}].name=this.textContent;savePx()">${svc.name}</div>
+        <div class="svc-hrs"><input type="number" step="0.5" value="${svc.hrs||0}" style="width:50px;font-size:12px;text-align:right" onblur="svcData[${ci}].items[${si}].hrs=parseFloat(this.value)||0;savePx();renderSvc()" title="Horas"> h</div>
+        <div class="svc-val" contenteditable="true" onblur="svcData[${ci}].items[${si}].brl=parseFloat(this.textContent.replace(/[^0-9.]/g,''))||0;savePx()">${fmt(valBRL)}</div>
+        <button class="svc-del" onclick="svcData[${ci}].items.splice(${si},1);savePx();renderSvc()">✕</button>`;
+      div.appendChild(row);
+    });
+    const addBtn=document.createElement('button'); addBtn.className='btn'; addBtn.style.cssText='font-size:11px;margin-top:4px';
+    addBtn.textContent='+ serviço'; addBtn.onclick=()=>{ cat.items.push({name:'Novo serviço',hrs:1,brl:getHora()}); savePx(); renderSvc(); };
+    div.appendChild(addBtn);
+    c.appendChild(div);
+  });
+}
+window.addSvcCat=()=>{ svcData.push({cat:'Nova categoria',items:[]}); savePx(); renderSvc(); };
+window.addSvc=()=>{ if(svcData.length) svcData[0].items.push({name:'Novo serviço',hrs:1,brl:getHora()}); savePx(); renderSvc(); };
+
+function renderPkgs(){
+  const c=document.getElementById('pkgList'); if(!c) return; c.innerHTML='';
+  pkgData.forEach((pkg,pi)=>{
+    const allSvcs=svcData.flatMap(c=>c.items);
+    const total=pkg.items.reduce((a,name)=>{ const s=allSvcs.find(x=>x.name===name); return a+(s?s.brl:0); },0);
+    const discounted=total*(1-pkg.disc/100);
+    const div=document.createElement('div'); div.className='pkg-card'+(pkg.featured?' featured':'');
+    div.innerHTML=`
+      <div class="pkg-discount">${pkg.disc}% off</div>
+      <h4 contenteditable="true" onblur="pkgData[${pi}].name=this.textContent;savePx()">${pkg.name}</h4>
+      <div><span class="pkg-price">${fmt(discounted)}</span><span class="pkg-original">${fmt(total)}</span></div>
+      <div class="pkg-items">${pkg.items.join(' · ')}</div>
+      <div style="margin-top:8px;display:flex;gap:6px">
+        <button class="btn" style="font-size:11px" onclick="editPkg(${pi})">editar</button>
+        <button class="btn" style="font-size:11px" onclick="pkgData.splice(${pi},1);savePx();renderPkgs()">remover</button>
+      </div>`;
+    c.appendChild(div);
+  });
+}
+window.addPkg=()=>{ pkgData.push({name:'Novo pacote',disc:10,items:[],featured:false}); savePx(); renderPkgs(); };
+window.editPkg=(pi)=>{
+  const pkg=pkgData[pi];
+  const allSvcs=svcData.flatMap(c=>c.items).map(s=>s.name);
+  document.getElementById('modalContent').innerHTML=`
+    <h3 style="font-family:Cambria,serif">Editar pacote</h3>
+    <div class="px-field"><label>Nome</label><input id="pkgName" value="${pkg.name}" style="width:100%"></div>
+    <div class="px-field"><label>Desconto %</label><input id="pkgDisc" type="number" value="${pkg.disc}" style="width:100%"></div>
+    <div class="px-field"><label>Serviços incluídos</label>
+      <div id="pkgSvcs" style="max-height:200px;overflow-y:auto;border:1px solid var(--line);border-radius:6px;padding:6px">
+        ${allSvcs.map(s=>`<label style="display:flex;gap:6px;align-items:center;padding:3px 0;font-size:13px"><input type="checkbox" value="${s}" ${pkg.items.includes(s)?'checked':''}> ${s}</label>`).join('')}
+      </div>
+    </div>
+    <label style="display:flex;gap:6px;align-items:center;margin:8px 0;font-size:13px"><input type="checkbox" id="pkgFeat" ${pkg.featured?'checked':''}> Destaque</label>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn primary" onclick="savePkgEdit(${pi})">salvar</button>
+      <button class="btn" onclick="closeModal()">cancelar</button>
+    </div>`;
+  document.getElementById('postModal').classList.add('open');
+};
+window.savePkgEdit=(pi)=>{
+  pkgData[pi].name=document.getElementById('pkgName').value;
+  pkgData[pi].disc=parseFloat(document.getElementById('pkgDisc').value)||0;
+  pkgData[pi].featured=document.getElementById('pkgFeat').checked;
+  pkgData[pi].items=[...document.querySelectorAll('#pkgSvcs input:checked')].map(el=>el.value);
+  savePx(); renderPkgs(); closeModal();
+};
+
+// Faturamento
+function renderFatur(){
+  const kpis=document.getElementById('faturKpis'); const tb=document.getElementById('faturBody');
+  if(!kpis||!tb) return;
+  const total=faturData.reduce((a,r)=>a+(r.receita||0),0);
+  const avg=faturData.length?total/faturData.length:0;
+  const thisYear=new Date().getFullYear();
+  const anoAtual=faturData.filter(r=>r.ano===thisYear).reduce((a,r)=>a+(r.receita||0),0);
+  kpis.innerHTML=`
+    <div class="kpi"><div class="val">${fmt(total)}</div><div class="lbl">Total acumulado</div></div>
+    <div class="kpi"><div class="val">${fmt(anoAtual)}</div><div class="lbl">${thisYear}</div></div>
+    <div class="kpi"><div class="val">${fmt(avg)}</div><div class="lbl">Média/mês</div></div>
+    <div class="kpi"><div class="val">${faturData.length}</div><div class="lbl">Meses registrados</div></div>`;
+  tb.innerHTML='';
+  [...faturData].reverse().forEach((r,ri)=>{
+    const i=faturData.length-1-ri;
+    const tr=document.createElement('tr');
+    const media=r.projetos?(r.receita/r.projetos):0;
+    tr.innerHTML=`<td>${r.mes||''}/${r.ano||''}</td><td>${fmt(r.receita||0)}</td><td>${r.projetos||0}</td><td>${fmt(media)}</td><td><button onclick="faturData.splice(${i},1);savePx();renderFatur()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px">✕</button></td>`;
+    tb.appendChild(tr);
+  });
+}
+window.addFaturRow=()=>{
+  const now=new Date();
+  document.getElementById('modalContent').innerHTML=`
+    <h3 style="font-family:Cambria,serif">Registrar mês</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="px-field"><label>Mês</label><input id="fMes" type="number" min="1" max="12" value="${now.getMonth()+1}"></div>
+      <div class="px-field"><label>Ano</label><input id="fAno" type="number" value="${now.getFullYear()}"></div>
+      <div class="px-field"><label>Receita total (R$)</label><input id="fReceita" type="number" value="0"></div>
+      <div class="px-field"><label>Nº de projetos</label><input id="fProjetos" type="number" value="1"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn primary" onclick="saveFatur()">salvar</button>
+      <button class="btn" onclick="closeModal()">cancelar</button>
+    </div>`;
+  document.getElementById('postModal').classList.add('open');
+};
+window.saveFatur=()=>{
+  faturData.push({mes:parseInt(document.getElementById('fMes').value),ano:parseInt(document.getElementById('fAno').value),receita:parseFloat(document.getElementById('fReceita').value)||0,projetos:parseInt(document.getElementById('fProjetos').value)||1});
+  savePx(); renderFatur(); closeModal();
+};
+
+// Backup
+window.exportBackup=()=>{
+  const data={posts,rows,ctItems,scripts,ads,dashData,svcData,pkgData,faturData,custosData,exportDate:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='dapaz_backup_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+};
+
+// Fetch USD rate
+fetch('https://economia.awesomeapi.com.br/last/USD-BRL').then(r=>r.json()).then(d=>{
+  usdRate=parseFloat(d.USDBRL?.bid)||5.8;
+}).catch(()=>{});
+
+// Init pricing on tab switch
+document.getElementById('tabnav').addEventListener('click', e=>{
+  if(e.target.dataset.tab==='precificacao'){
+    setTimeout(()=>{ renderCustos(); calcHora(); renderSvc(); renderPkgs(); renderFatur(); },50);
+  }
+});
+</script>
